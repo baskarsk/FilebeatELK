@@ -6,9 +6,10 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: filebeat
+    kubernetes.io/cluster-service: "true"
 data:
   filebeat.yml: |-
-    filebeat.config:
+    filebeat.config: 
       inputs:
         # Mounted `filebeat-inputs` configmap:
         path: ${path.config}/inputs.d/*.yml
@@ -31,10 +32,13 @@ data:
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
 
-    output.elasticsearch:
-      hosts: ['${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}']
-      username: ${ELASTICSEARCH_USERNAME}
-      password: ${ELASTICSEARCH_PASSWORD}
+    output.logstash:
+      hosts: ['${LOGSTASH_HOST:13.233.185.68}:${LOGSTASH_PORT:5044}']
+      
+    #output.elasticsearch:
+    #  hosts: ['${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}']
+    #  username: ${ELASTICSEARCH_USERNAME}
+    #  password: ${ELASTICSEARCH_PASSWORD}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -43,14 +47,20 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: filebeat
+    kubernetes.io/cluster-service: "true"
 data:
   kubernetes.yml: |-
-    - type: docker
+    - type: log
+      paths: 
+        - /var/lib/docker/containers/*/*.log
+      json.message_key: log
+      json.keys_under_root: true
       containers.ids:
       - "*"
       processors:
         - add_kubernetes_metadata:
             in_cluster: true
+            namespace: ${POD_NAMESPACE}
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
@@ -74,9 +84,20 @@ spec:
           "-c", "/etc/filebeat.yml",
           "-e",
         ]
+        command:
+        - /usr/share/filebeat/filebeat
         env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: LOGSTASH_HOST
+          value: "13.233.185.68"
+        - name: LOGSTASH_PORT
+          value: "5044"
         - name: ELASTICSEARCH_HOST
-          value: elasticsearch
+          value: "13.233.185.68"
         - name: ELASTICSEARCH_PORT
           value: "9200"
         - name: ELASTICSEARCH_USERNAME
@@ -90,7 +111,7 @@ spec:
         securityContext:
           runAsUser: 0
           # If using Red Hat OpenShift uncomment this:
-          #privileged: true
+          privileged: true
         resources:
           limits:
             memory: 200Mi
