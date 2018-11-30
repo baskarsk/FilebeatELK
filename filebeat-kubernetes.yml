@@ -28,6 +28,8 @@ data:
 
     processors:
       - add_cloud_metadata:
+      - add_kubernetes_metadata:
+      - add_docker_metadata:
 
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
@@ -69,17 +71,20 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: filebeat
+    kubernetes.io/cluster-service: "true"
 spec:
   template:
     metadata:
       labels:
         k8s-app: filebeat
+        kubernetes.io/cluster-service: "true"
     spec:
       serviceAccountName: filebeat
       terminationGracePeriodSeconds: 30
       containers:
       - name: filebeat
-        image: docker.elastic.co/beats/filebeat:7.0.0-alpha1
+        image: docker.elastic.co/beats/filebeat:6.4.2
+        imagePullPolicy: Always
         args: [
           "-c", "/etc/filebeat.yml",
           "-e",
@@ -101,9 +106,9 @@ spec:
         - name: ELASTICSEARCH_PORT
           value: "9200"
         - name: ELASTICSEARCH_USERNAME
-          value: elastic
+          value: 
         - name: ELASTICSEARCH_PASSWORD
-          value: changeme
+          value: 
         - name: ELASTIC_CLOUD_ID
           value:
         - name: ELASTIC_CLOUD_AUTH
