@@ -57,6 +57,7 @@ data:
         - /var/lib/docker/containers/*/*.log
       json.message_key: log
       json.keys_under_root: true
+    - type: docker
       containers.ids:
       - "*"
       processors:
