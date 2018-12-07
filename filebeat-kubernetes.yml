@@ -91,9 +91,9 @@ spec:
           "-c", "/etc/filebeat.yml",
           "-e",
         ]
-        command:
-        - docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat
-        - /usr/share/filebeat/filebeat
+        #command:
+        #- docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat
+        #- /usr/share/filebeat/filebeat
         env:
         - name: POD_NAMESPACE
           valueFrom:
@@ -120,6 +120,9 @@ spec:
           runAsUser: 0
           # If using Red Hat OpenShift uncomment this:
           privileged: true
+        command:
+        - docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat:6.5.1
+        - /usr/share/filebeat/filebeat
         resources:
           limits:
             memory: 200Mi
