@@ -28,9 +28,9 @@ data:
 
     processors:
       - add_cloud_metadata:
-      - add_kubernetes_metadata:
-      - add_docker_metadata:
-          host: "unix:///var/run/docker.sock"
+      #- add_kubernetes_metadata:
+      #- add_docker_metadata:
+      #    host: "unix:///var/run/docker.sock"
 
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
@@ -91,9 +91,8 @@ spec:
           "-c", "/etc/filebeat.yml",
           "-e",
         ]
-        #command:
-        #- docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat
-        #- /usr/share/filebeat/filebeat
+        command:
+        - /usr/share/filebeat/filebeat
         env:
         - name: POD_NAMESPACE
           valueFrom:
@@ -120,9 +119,6 @@ spec:
           runAsUser: 0
           # If using Red Hat OpenShift uncomment this:
           privileged: true
-        command:
-        - docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat:6.5.1
-        - /usr/share/filebeat/filebeat
         resources:
           limits:
             memory: 200Mi
