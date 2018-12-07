@@ -92,6 +92,7 @@ spec:
           "-e",
         ]
         command:
+        - docker run -u root /var/run/docker.sock:/var/run/docker.sock:ro filebeat
         - /usr/share/filebeat/filebeat
         env:
         - name: POD_NAMESPACE
