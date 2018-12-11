@@ -29,7 +29,7 @@ data:
     processors:
       #- add_cloud_metadata:
       #- add_kubernetes_metadata: 
-          in_cluster: true
+      #    in_cluster: true
       - add_docker_metadata:
           host: "unix:///var/run/docker.sock"
 
