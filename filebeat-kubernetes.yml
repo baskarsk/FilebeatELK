@@ -28,10 +28,10 @@ data:
 
     processors:
       #- add_cloud_metadata:
-      #- add_kubernetes_metadata: 
-      #    in_cluster: true
-      - add_docker_metadata:
-          host: "unix:///var/run/docker.sock"
+      - add_kubernetes_metadata: 
+          in_cluster: true
+      #- add_docker_metadata:
+      #    host: "unix:///var/run/docker.sock"
 
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
@@ -67,11 +67,11 @@ data:
       # - "*"
       # Above container id's are added to get specific logs for those pods.
       processors:
-        #- add_kubernetes_metadata:
-        #    in_cluster: true
-        #    namespace: ${POD_NAMESPACE}
-        - add_docker_metadata: 
-            host: "unix:///var/run/docker.sock"
+        - add_kubernetes_metadata:
+            in_cluster: true
+            namespace: ${POD_NAMESPACE}
+        #- add_docker_metadata: 
+        #    host: "unix:///var/run/docker.sock"
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
