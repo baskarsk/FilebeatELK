@@ -144,6 +144,8 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
       volumes:
       - name: config
         configMap:
@@ -161,6 +163,9 @@ spec:
         hostPath:
           path: /var/lib/filebeat-data
           type: DirectoryOrCreate
+      - name: docker-socket
+        hostpath: 
+          path: /var/run/docker.sock
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
