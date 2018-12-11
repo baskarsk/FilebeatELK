@@ -60,11 +60,11 @@ data:
       json.message_key: log
       json.keys_under_root: true
     - type: docker
-      #containers.ids:
-      # - "*"
       containers.ids: 
         - 6ed784b8cb66606097dfdac7ac433d557a9a6dab528a2171dbee768d7bcf112c
         - 41de8c528168b33ffad9b3e924930d1befc6d57ac99ba82ece5296ffb685df05
+      #containers.ids:
+      # - "*"
       processors:
         #- add_kubernetes_metadata:
         #    in_cluster: true
