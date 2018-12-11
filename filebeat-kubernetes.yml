@@ -65,6 +65,7 @@ data:
         - 41de8c528168b33ffad9b3e924930d1befc6d57ac99ba82ece5296ffb685df05
       #containers.ids:
       # - "*"
+      # Above container id's are added to get specific logs for those pods.
       processors:
         #- add_kubernetes_metadata:
         #    in_cluster: true
@@ -97,8 +98,11 @@ spec:
           "-c", "/etc/filebeat.yml",
           "-e",
         ]
-        command:
+        command: 
         - /usr/share/filebeat/filebeat
+        # Added below line for docker metadata
+        command: 
+        - ['docker', 'run', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'filebeat']  
         env:
         - name: POD_NAMESPACE
           valueFrom:
@@ -146,6 +150,7 @@ spec:
           readOnly: true
         - name: docker-socket
           mountPath: /var/run/docker.sock
+          # Added above two lines for docker metadata
       volumes:
       - name: config
         configMap:
@@ -166,6 +171,7 @@ spec:
       - name: docker-socket
         hostpath: 
           path: /var/run/docker.sock
+          # Added above two lines for docker metadata
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
