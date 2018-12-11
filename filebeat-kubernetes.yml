@@ -100,9 +100,9 @@ spec:
         ]
         command: 
         - /usr/share/filebeat/filebeat
-        # Added below line for docker metadata
-        command: 
-        - ['docker', 'run', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'filebeat']  
+        # Added below line for docker metadata - BUT NOT WORKING - need to check the correct one and replace.
+        #command: 
+        #- ['docker', 'run', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'filebeat']  
         env:
         - name: POD_NAMESPACE
           valueFrom:
