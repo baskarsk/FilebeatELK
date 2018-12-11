@@ -36,11 +36,11 @@ data:
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
 
-    #output.logstash:
-    #  hosts: ['${LOGSTASH_HOST:13.233.185.68}:${LOGSTASH_PORT:5044}']
+    output.logstash:
+      hosts: ['${LOGSTASH_HOST:13.233.185.68}:${LOGSTASH_PORT:5044}']
       
-    output.elasticsearch:
-      hosts: ['${ELASTICSEARCH_HOST:13.233.185.68}:${ELASTICSEARCH_PORT:9200}']
+    #output.elasticsearch:
+    #  hosts: ['${ELASTICSEARCH_HOST:13.233.185.68}:${ELASTICSEARCH_PORT:9200}']
       #username: ${ELASTICSEARCH_USERNAME}
       # : ${ELASTICSEARCH_PASSWORD}
 ---
@@ -60,12 +60,17 @@ data:
       json.message_key: log
       json.keys_under_root: true
     - type: docker
-      containers.ids:
-      - "*"
+      #containers.ids:
+      # - "*"
+      containers.ids: 
+        - 6ed784b8cb66606097dfdac7ac433d557a9a6dab528a2171dbee768d7bcf112c
+        - 41de8c528168b33ffad9b3e924930d1befc6d57ac99ba82ece5296ffb685df05
       processors:
-        - add_kubernetes_metadata:
-            in_cluster: true
-            namespace: ${POD_NAMESPACE}
+        #- add_kubernetes_metadata:
+        #    in_cluster: true
+        #    namespace: ${POD_NAMESPACE}
+        - add_docker_metadata: 
+            host: "unix:///var/run/docker.sock"
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
