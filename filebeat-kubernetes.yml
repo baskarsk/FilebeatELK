@@ -25,7 +25,6 @@ data:
     #  providers:
     #    - type: kubernetes
     #      hints.enabled: true
-
     processors:
       #- add_cloud_metadata:
       - add_kubernetes_metadata: 
@@ -58,7 +57,10 @@ data:
       paths: 
         - /var/lib/docker/containers/*/*.log
       json.message_key: log
+      json.add_error_key: true
       json.keys_under_root: true
+      symlinks: true
+      tail_files: true
     - type: docker
       containers.ids: 
         - 6ed784b8cb66606097dfdac7ac433d557a9a6dab528a2171dbee768d7bcf112c
@@ -67,6 +69,10 @@ data:
       # - "*"
       # Above container id's are added to get specific logs for those pods.
       processors:
+        - decode_json_fields:
+            fields: ["log"]
+            #Merge the decoded JSON fields into the root of the event:
+            target: ""
         - add_kubernetes_metadata:
             in_cluster: true
             namespace: ${POD_NAMESPACE}
@@ -151,6 +157,12 @@ spec:
         - name: docker-socket
           mountPath: /var/run/docker.sock
           # Added above two lines for docker metadata
+        - name: varlogpods
+          mountPath: /var/log/pods
+          readOnly: true
+        - name: varlogcontainers
+          mountPath: /var/log/containers
+          readOnly: true 
       volumes:
       - name: config
         configMap:
@@ -159,6 +171,12 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: varlogpods
+        hostPath:
+          path: /var/log/pods
+      - name: varlogcontainers
+        hostPath:
+          path: /var/log/containers
       - name: inputs
         configMap:
           defaultMode: 0600
