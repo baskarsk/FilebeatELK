@@ -55,7 +55,7 @@ data:
   kubernetes.yml: |-
     - type: log
       paths: 
-        - /var/lib/docker/containers/*/*.log
+        - /var/lib/docker/containers/*/*-json.log
       json.message_key: log
       json.add_error_key: true
       json.keys_under_root: true
@@ -67,6 +67,8 @@ data:
       #  - 41de8c528168b33ffad9b3e924930d1befc6d57ac99ba82ece5296ffb685df05
       containers.ids:
        - "*"
+      exclude_files:
+        - filebeat-.*\.log
       # Above container id's are added to get specific logs for those pods.
       processors:
         - decode_json_fields:
@@ -78,6 +80,12 @@ data:
             namespace: ${POD_NAMESPACE}
         #- add_docker_metadata: 
         #    host: "unix:///var/run/docker.sock"
+logging:
+  to_files: true
+  level: warning
+  level: info
+  level: debug
+  level: error
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
