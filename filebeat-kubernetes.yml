@@ -27,10 +27,10 @@ data:
     #      hints.enabled: true
     processors:
       #- add_cloud_metadata:
-      #- add_kubernetes_metadata: 
-      #    in_cluster: true
-      - add_docker_metadata:
-          host: "unix:///var/run/docker.sock"
+      - add_kubernetes_metadata: 
+          in_cluster: true
+      #- add_docker_metadata:
+      #    host: "unix:///var/run/docker.sock"
 
     cloud.id: ${ELASTIC_CLOUD_ID}
     cloud.auth: ${ELASTIC_CLOUD_AUTH}
@@ -79,8 +79,8 @@ data:
         - add_kubernetes_metadata:
             in_cluster: true
             namespace: ${POD_NAMESPACE}
-        - add_docker_metadata: 
-            host: "unix:///var/run/docker.sock"
+        #- add_docker_metadata: 
+        #    host: "unix:///var/run/docker.sock"
 logging:
   to_files: true
   level: warning
