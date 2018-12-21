@@ -83,7 +83,6 @@ data:
         #    host: "unix:///var/run/docker.sock"
 logging.to_files: true
 logging.level: debug
-logging.selectors: ["piggyfinance","account-service","statistics-service","beat"]
 logging.files: 
   keepfiles: 2
   rotateeverybytes: 1m
@@ -93,6 +92,7 @@ logging.files:
   #level: info
   #level: warning
   #level: error
+  #logging.selectors: ["piggyfinance","account-service","statistics-service","beat"]
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
